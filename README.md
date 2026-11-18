@@ -2,7 +2,19 @@
 
 <img src="Assets/logo.svg" alt="Media Audio Controller logo" width="128" height="128">
 
-Media Audio Controller is a Windows desktop application that controls the current Windows media session and changes the system's default audio output when playback starts or pauses. For example, you can switch to headphones for playback and speakers when playback is paused.
+Media Audio Controller is a Windows desktop application that controls the current Windows media session and changes the system's default audio output when playback starts or pauses.
+
+## Why this tool?
+
+Imagine listening to music through your speakers when a meeting call comes in. Before joining, you may need to pause the music and switch the Windows audio output to your headset. After the call, you want to switch back to your speakers and resume listening. Media Audio Controller combines each of those steps into a single action:
+
+1. Configure **Switch on Pause to** as your headset and **Switch on Play to** as your speakers.
+2. Before joining the call, click **Pause**: the tool pauses the current media session and then switches the Windows default audio output to your headset.
+3. After the call, click **Play**: the tool switches the default audio output back to your speakers and then resumes playback.
+
+You can also configure keyboard macro keys to launch the application with parameters. For example, set one key to run `MediaAudioController.exe -silent -pause` and another to run `MediaAudioController.exe -silent -play`. Once the devices are configured in the UI, these commands perform the same actions without showing a window and then exit. Use the full path to the executable in your keyboard software; see [Command-line parameters](#command-line-parameters) for more examples.
+
+The tool controls the current Windows media session and changes the system default output; it does not answer or end calls. A meeting application using its own selected output may not follow the Windows default.
 
 The application icon is embedded in the executable. The SVG logo is included separately for the README.
 
