@@ -12,8 +12,8 @@
     <ApplicationIcon>Assets\logo.ico</ApplicationIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <SignAssembly>False</SignAssembly>
-    <AssemblyVersion>10.0.1.0</AssemblyVersion>
-    <FileVersion>10.0.1.0</FileVersion>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <FileVersion>1.0.1.0</FileVersion>
     <Copyright>Kai Pautsch EDV</Copyright>
     <Description>Die Anwendung ermöglicht den schnellen Wechsel zwischen verschiedenen Audio-Ausgabegeräten, beispielsweise Lautsprechern und Headsets. Zusätzlich stehen Funktionen zur Steuerung der Medienwiedergabe zur Verfügung. Dadurch eignet sich MediaAudioController insbesondere für die Verwendung mit programmierbaren Tastaturen, Makrotasten und anderen Eingabegeräten.</Description>
     <PackageProjectUrl>https://pautsch-edv.com/media-audio-controller/</PackageProjectUrl>
