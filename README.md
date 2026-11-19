@@ -12,6 +12,8 @@ Imagine listening to music through your speakers when a meeting call comes in. B
 2. Before joining the call, click **Pause**: the tool pauses the current media session and then switches the Windows default audio output to your headset.
 3. After the call, click **Play**: the tool switches the default audio output back to your speakers and then resumes playback.
 
+If Windows has no current media session, the Play and Pause actions still switch to their configured audio output and skip the playback command. In that case, **Play/Pause** cannot determine the current playback state, so it switches to the Play output without issuing a playback command.
+
 You can also configure keyboard macro keys to launch the application with parameters. For example, set one key to run `MediaAudioController.exe -silent -pause` and another to run `MediaAudioController.exe -silent -play`. Once the devices are configured in the UI, these commands perform the same actions without showing a window and then exit. Use the full path to the executable in your keyboard software; see [Command-line parameters](#command-line-parameters) for more examples.
 
 The tool controls the current Windows media session and changes the system default output; it does not answer or end calls. A meeting application using its own selected output may not follow the Windows default.
@@ -30,8 +32,8 @@ The application icon is embedded in the executable. The SVG logo is included sep
 ### Running a published application
 
 - Windows 10 version 2004 (build 19041) or later, matching the architecture of the published application (for example, `win-x64` for Windows x64). This is the project's configured minimum; older versions have not been verified. See Microsoft's [supported Windows versions for .NET](https://learn.microsoft.com/en-us/dotnet/core/install/windows#supported-versions) for current support status.
-- A media player exposing a current Windows media session and supporting the requested playback commands and status updates.
 - At least one active audio output device and a Windows multimedia default output device.
+- A compatible Windows media session is optional: without one, the configured audio output is still switched, but playback cannot be controlled.
 - A writable application directory to save configuration and, in silent mode, error logs.
 - **Self-contained publish:** no separate .NET runtime or SDK installation is required; the runtime is included.
 - **Framework-dependent publish:** the [.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0) for the application architecture must be installed. Run `dotnet --list-runtimes` and look for `Microsoft.WindowsDesktop.App` 10.x for that architecture.
@@ -92,7 +94,7 @@ Self-contained output is larger and must be republished to pick up runtime secur
 
 **Play** switches the default output first, then requests playback. If the session is already playing, it only switches the output. **Pause** requests a pause first and waits up to five seconds for the session to report that it is paused or stopped before switching the output. If it is already paused or stopped, the output is switched directly. If pause is rejected or not confirmed, the output is not switched. If playback fails after a Play request, the output may already have changed.
 
-**Play/Pause** reads the session's current status: playing triggers Pause; paused or stopped triggers Play. Other states cannot be toggled and produce an error.
+When Windows has no current media session, Play and Pause still switch their configured output and skip the playback command. In that case, Play/Pause cannot infer whether playback should start or pause; it switches to the Play output and does not send a playback command. With a media session, **Play/Pause** reads its status: playing triggers Pause; paused or stopped triggers Play. Other states cannot be toggled and produce an error.
 
 ## Command-line parameters
 
@@ -154,7 +156,7 @@ The application directory must be writable: otherwise configuration changes cann
 
 ## Troubleshooting
 
-- **No media session:** Start a compatible media player and make sure it exposes playback through Windows media controls. The application controls the session Windows reports as current; it does not select a player by name.
+- **No media session:** Audio switching still works. Play and Pause switch to their configured outputs but cannot control playback; Play/Pause switches to the Play output because there is no session status to toggle. Start a compatible media player if you want playback control. The application controls the session Windows reports as current; it does not select a player by name.
 - **No devices or the wrong device:** Check Windows sound settings, enable the output, and press **Refresh**. Only active playback devices are listed. Confirm the selections before retrying.
 - **Pause times out or Play fails:** The player may not support the command or may not report its playback state promptly. Pause requires confirmation before the device is switched.
 - **Configuration or log cannot be written:** Move the application to a directory where your user account has write permission.

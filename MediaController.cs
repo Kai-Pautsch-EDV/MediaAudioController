@@ -14,9 +14,8 @@ namespace MediaAudioController
         public static async Task ExecuteAsync(MediaAction action, AudioSettings settings)
         {
             var manager = await GlobalSystemMediaTransportControlsSessionManager.RequestAsync();
-            var session = manager.GetCurrentSession()
-                ?? throw new InvalidOperationException("No Windows media session is available.");
-            var status = session.GetPlaybackInfo().PlaybackStatus;
+            var session = manager.GetCurrentSession();
+            var status = session?.GetPlaybackInfo().PlaybackStatus;
 
             if (action == MediaAction.PlayPause)
             {
@@ -25,6 +24,7 @@ namespace MediaAudioController
                     GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing => MediaAction.Pause,
                     GlobalSystemMediaTransportControlsSessionPlaybackStatus.Paused or
                     GlobalSystemMediaTransportControlsSessionPlaybackStatus.Stopped => MediaAction.Play,
+                    null => MediaAction.Play,
                     _ => throw new InvalidOperationException($"Cannot toggle media playback in state {status}.")
                 };
             }
@@ -36,7 +36,8 @@ namespace MediaAudioController
 
             if (action == MediaAction.Pause)
             {
-                if (status != GlobalSystemMediaTransportControlsSessionPlaybackStatus.Paused &&
+                if (session is not null &&
+                    status != GlobalSystemMediaTransportControlsSessionPlaybackStatus.Paused &&
                     status != GlobalSystemMediaTransportControlsSessionPlaybackStatus.Stopped)
                     await PauseAsync(session);
 
@@ -45,7 +46,8 @@ namespace MediaAudioController
             else
             {
                 AudioDevices.SetDefault(device.Id);
-                if (status != GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing &&
+                if (session is not null &&
+                    status != GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing &&
                     !await session.TryPlayAsync())
                     throw new InvalidOperationException("The audio output was changed, but the media session could not be started.");
             }
